@@ -1,8 +1,11 @@
 <template>
+  <!-- Main container for the ToDo application -->
   <div class="flex justify-center mt-5 text-white">
     <div>
+      <!-- Application title -->
       <h1 class="text-4xl font-bold mb-4 text-center ">Wigital ToDo Frontend</h1>
 
+      <!-- Input field and button for adding new todos -->
       <div class="mt-10 input-container">
         <input v-model="newTodo" type="text" placeholder="Type your ToDo" class="input input-bordered mb-4">
         <button @click="addTodo" class="btn btn-primary mb-4 align-right">
@@ -10,16 +13,21 @@
         </button>
       </div>
 
+      <!-- List of todos -->
       <ul class="todo-list">
         <li v-for="(todo, index) in todos" :key="index" class="todo-item">
+          <!-- Display todo item -->
           <div v-if="!todo.editing" class="todo-content">
+            <!-- Display todo status -->
             <div :class="{'active': todo.Status === 0, 'completed': todo.Status !== 0}">
               <i :class="todo.Status === 0 ? 'far fa-circle' : 'fas fa-check-circle'"></i>
               {{ todo.Status === 0 ? 'Active' : 'Completed' }}
             </div>
+            <!-- Display todo description -->
             <div class="todo-description">
               {{ todo.Description }}
             </div>
+            <!-- Display todo actions -->
             <div class="todo-actions">
               <button @click="deleteTodo(todo.id)" class="btn btn-error">
                 <i class="fas fa-trash"></i> Delete
@@ -32,6 +40,7 @@
               </button>
             </div>
           </div>
+          <!-- Display edit form for todo -->
           <EditTodo v-else :todo="todo" @update="updateTodo" />
         </li>
       </ul>
@@ -43,26 +52,19 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
 
+// State for the list of todos and the new todo input field
 const todos = ref([]);
 const newTodo = ref();
 
+// Base URL for the todo backend API
 const baseUrl = 'https://todobackend.ddev.site/task/';
 
+// Emit event for updating a todo
 const emit = defineEmits(['update']);
 
-
-/*
-
-  - GET /task : Get all task
-	- GET /task/{TaskId} : Get one task
-	- POST /task : Create new task
-	- PUT /task/{TaskId} : Update task
-	- DELETE /task/{TaskId} : Delete task
-
- */
-
-// { "id": 1, "TaskID": 0, "UserID": 0, "Description": "Test Task", "Status": 0 }
+// Function for adding a new todo
 const addTodo = () => {
+  // Send a POST request to the backend API
   fetch(baseUrl, {
     method: 'POST',
     headers: {
@@ -76,25 +78,31 @@ const addTodo = () => {
   })
       .then(response => response.json())
       .then(data => {
-
+        // Add the new todo to the list and clear the input field
         todos.value.push(data.task);
         newTodo.value = '';
       });
 };
 
+// Function for updating a todo
 const updateTodo = (updatedTodo) => {
+  // Find the index of the todo in the list
   const index = todos.value.findIndex(todo => todo.id === updatedTodo.id);
   if (index !== -1) {
+    // Replace the todo in the list and set editing to false
     todos.value[index] = updatedTodo;
     todos.value[index].editing = false;
   }
 };
 
+// Function for deleting a todo
 const deleteTodo = (id: number) => {
+  // Send a DELETE request to the backend API
   fetch(`${baseUrl}${id}`, {
     method: 'DELETE',
   })
       .then(() => {
+        // Find the index of the todo in the list and remove it
         const index = todos.value.findIndex(todo => todo.id === id);
         if (index !== -1) {
           todos.value.splice(index, 1);
@@ -102,7 +110,9 @@ const deleteTodo = (id: number) => {
       });
 };
 
+// Function for marking a todo as checked
 const markAsChecked = (todo) => {
+  // Send a PUT request to the backend API
   fetch(`https://todobackend.ddev.site/task/${todo.id}`, {
     method: 'PUT',
     headers: {
@@ -115,6 +125,7 @@ const markAsChecked = (todo) => {
   })
       .then(response => response.json())
       .then(updatedTodo => {
+        // Find the index of the todo in the list and replace it with the updated todo
         const index = todos.value.findIndex(t => t.id === updatedTodo.task.id);
         if (index !== -1) {
           todos.value[index] = updatedTodo.task;
@@ -122,22 +133,18 @@ const markAsChecked = (todo) => {
       });
 };
 
+// Function for loading the initial list of todos from the backend API
 onMounted(() => {
-  // load initial todos from https://todobackend.ddev.site/task/
   fetch('https://todobackend.ddev.site/task/')
       .then(response => response.json())
       .then(data => {
-        // {"tasks":[{"id":1,"TaskID":0,"UserID":0,"Description":"Test Task","Status":0}]}
-
-        // loop tasks
+        // Add each todo to the list
         data.tasks.forEach(task => {
           todos.value.push(task);
         });
-
       });
 });
 </script>
-
 <style scoped>
 
 .todo-list {
