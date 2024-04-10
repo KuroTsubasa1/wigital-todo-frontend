@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="edit-form">
     <form @submit.prevent="editTodo">
       <input v-model="editedTodo.Description" type="text" placeholder="Edit todo" class="input input-bordered mb-4">
       <select v-model="editedTodo.Status" class="select select-bordered w-full mb-4">
@@ -41,3 +41,25 @@ const editTodo = () => {
       });
 };
 </script>
+
+<style scoped>
+.edit-form {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.input, .select {
+  font-size: 1.2em;
+}
+
+.btn {
+  margin-top: 20px;
+  margin-right: 10px;
+}
+</style>

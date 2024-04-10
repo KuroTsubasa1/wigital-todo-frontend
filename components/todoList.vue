@@ -1,11 +1,13 @@
 <template>
   <div class="flex justify-center mt-5 text-white">
     <div>
-      <h1 class="text-4xl font-bold mb-4  ">Wigital ToDo Frontend</h1>
+      <h1 class="text-4xl font-bold mb-4 text-center ">Wigital ToDo Frontend</h1>
 
-      <div class="mt-10">
+      <div class="mt-10 input-container">
         <input v-model="newTodo" type="text" placeholder="Type your ToDo" class="input input-bordered mb-4">
-        <button @click="addTodo" class="btn btn-primary mb-4">Add new Todo</button>
+        <button @click="addTodo" class="btn btn-primary mb-4 align-right">
+          <i class="fas fa-plus"></i> Add new Todo
+        </button>
       </div>
 
       <ul class="todo-list">
@@ -148,7 +150,7 @@ onMounted(() => {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  max-width: 600px; /* Add this line */
+  max-width: 1200px; /* Add this line */
   margin-left: auto; /* Add this line */
   margin-right: auto; /* Add this line */
 }
@@ -177,4 +179,22 @@ onMounted(() => {
 .completed {
   color: red;
 }
+.align-right {
+  margin-left: auto;
+}
+
+.input-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-container button {
+ width: 100%;
+}
+
+.input {
+  width: 100%;
+}
+
 </style>
